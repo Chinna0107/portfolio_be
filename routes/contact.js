@@ -60,38 +60,17 @@ router.post('/', async (req, res) => {
       `
     };
 
-    // Try to send emails
-    try {
-      await transporter.sendMail(userMailOptions);
-      await transporter.sendMail(adminMailOptions);
-      
-      res.status(200).json({ 
-        success: true, 
-        message: 'Message sent successfully' 
-      });
-    } catch (emailError) {
-      console.error('Email sending failed:', emailError);
-      
-      // Log the contact data even if email fails
-      console.log('Contact form submission (email failed):', { 
-        name, 
-        email, 
-        message, 
-        timestamp: new Date() 
-      });
-      
-      res.status(200).json({ 
-        success: true, 
-        message: 'Message received successfully' 
-      });
-    }
+    await transporter.sendMail(userMailOptions);
+    await transporter.sendMail(adminMailOptions);
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Message sent successfully' 
+    });
 
   } catch (error) {
     console.error('Contact form error:', error);
-    res.status(500).json({ 
-      error: 'Internal server error',
-      details: error.message 
-    });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
